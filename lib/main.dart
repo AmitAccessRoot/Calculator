@@ -51,21 +51,30 @@ class CalculatorApp extends StatelessWidget {
   }
 }
 
-class PlaceholderScreen extends StatelessWidget {
-  const PlaceholderScreen({super.key});
+// Other imports remain the same...
+import 'presentation/calculator/screens/calculator_screen.dart';
+
+// main() and CalculatorApp class remain exactly the same as in Level 2...
+
+class CalculatorApp extends StatelessWidget {
+  const CalculatorApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Calculator Core Setup'),
-      ),
-      body: Center(
-        child: Text(
-          'Level 2 Completed: Zero-Crash & Isar Ready',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-      ),
+    return ScreenUtilInit(
+      designSize: const Size(390, 844),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'Offline Calculator',
+          debugShowCheckedModeBanner: false,
+          themeMode: ThemeMode.system,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          home: const CalculatorScreen(), // Replaced Placeholder with Real Screen
+        );
+      },
     );
   }
 }
