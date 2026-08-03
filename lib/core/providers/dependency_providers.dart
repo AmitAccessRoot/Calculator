@@ -30,3 +30,12 @@ final getHistoryUseCaseProvider = Provider<GetHistoryUseCase>((ref) {
 final clearHistoryUseCaseProvider = Provider<ClearHistoryUseCase>((ref) {
   return ClearHistoryUseCase(ref.read(historyRepositoryProvider));
 });
+
+// (Keep all previous code as it is in dependency_providers.dart)
+// Add this new provider at the end:
+
+import '../../domain/usecases/delete_calculation_usecase.dart';
+
+final deleteCalculationUseCaseProvider = Provider<DeleteCalculationUseCase>((ref) {
+  return DeleteCalculationUseCase(ref.read(historyRepositoryProvider));
+});
