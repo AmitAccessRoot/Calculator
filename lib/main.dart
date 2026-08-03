@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'core/theme/app_theme.dart';
+import 'core/error/error_boundary.dart';
+import 'data/datasources/local/isar_database.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Isar database initialization will be added here in Level 2
-  
-  runApp(
-    const ProviderScope(
-      child: CalculatorApp(),
-    ),
-  );
+  // Setup global error boundaries to prevent app crash
+  ErrorBoundary.initialize();
+
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    
+    // Initialize Local Database securely before UI loads
+    await IsarDatabase.initialize();
+    
+    runApp(
+      const ProviderScope(
+        child: CalculatorApp(),
+      ),
+    );
+  } catch (e, stack) {
+    debugPrint('App initialization failed: $e');
+    // If initialization fails completely, show fallback natively
+    runApp(const MaterialApp(home: GracefulFallbackWidget()));
+  }
 }
 
 class CalculatorApp extends StatelessWidget {
@@ -20,26 +33,24 @@ class CalculatorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ScreenUtilInit ensures the UI scales perfectly on mobile and tablets
     return ScreenUtilInit(
-      designSize: const Size(390, 844), // Standard HD base size
+      designSize: const Size(390, 844),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
           title: 'Offline Calculator',
           debugShowCheckedModeBanner: false,
-          themeMode: ThemeMode.system, // Automatically adapts to native system theme
+          themeMode: ThemeMode.system,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          home: const PlaceholderScreen(), // Placeholder until Level 5
+          home: const PlaceholderScreen(),
         );
       },
     );
   }
 }
 
-// Temporary screen to verify the setup
 class PlaceholderScreen extends StatelessWidget {
   const PlaceholderScreen({super.key});
 
@@ -47,11 +58,11 @@ class PlaceholderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calculator HD'),
+        title: const Text('Calculator Core Setup'),
       ),
       body: Center(
         child: Text(
-          'Level 1 Completed Successfully',
+          'Level 2 Completed: Zero-Crash & Isar Ready',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
